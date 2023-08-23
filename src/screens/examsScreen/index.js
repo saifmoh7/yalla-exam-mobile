@@ -1,9 +1,9 @@
-import { View, Text, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, Image, Dimensions, SafeAreaView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import styles from './style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getExamsList } from '../../utiles/database';
-import { Icon } from '../../components/comp';
+import { Footer, Icon } from '../../components/comp';
 
 export default function ExamsScreen({navigation}) {
 
@@ -55,46 +55,75 @@ export default function ExamsScreen({navigation}) {
 
 
   return (
-    <View>
-      <Text></Text>
-          <FlatList
-            data = {allExames}
-            onRefresh = {getExams}
-            refreshing={loading}
-            showsVerticalScrollIndicator={false}
-            style = {{...styles.examsContainer}}
-            renderItem = {({item: exam}) => (
-              <TouchableOpacity
-                // onPress={() => {
-                //   SelectedExam(exam._id, exam.noQues, exam.examTitel)
-                // }}
-                style = {{...styles.tExamContainer}}
-              >
-                <View style = {{...styles.examContainer}}>
-                  <Image
-                        source = {{uri: "https://www.gsctanks.com/wp-content/uploads/2018/11/shutterstock_264967397.jpg"}}
-                        style = {{width : sw*60/411.4, height : sw*60/411.4, borderRadius : sw*15/411.4, backgroundColor: '#ffffff'}}
-                  />
-                  <View style = {{...styles.examDescription}}>
-                    <Text style = {{fontSize: sw*16/411.4, color: '#ffffff'}}>{exam.examTitel}</Text>
-                    {showDes.includes(exam._id) ? <Text style = {{fontSize: sw*10/411.4, color: '#ffffff', marginLeft: sw*4/411.4}}>{exam.examDes}</Text> : <React.Fragment></React.Fragment>}
-                  </View>
-                  <Icon
-                        icon = "detail"
-                        size = {35}
-                        color = "#ffffff"
-                        onPress = {() => {
-                          if (showDes.includes(exam._id)) {
-                            setShowDes(showDes.filter(id => id != exam._id))
-                          }else{
-                            setShowDes([...showDes,exam._id])
-                          }
-                        }}
-                  />
+    <SafeAreaView style = {{...styles.master}}>
+      <View style = {{...styles.headerContainer}}>
+        <View>
+            <Text style = {{...styles.appName}}>
+                API 653 EXAM APP
+            </Text>
+        </View>
+      </View>
+      <View style = {{...styles.master1}}>
+        
+        <TouchableOpacity
+          // onPress={() => {
+          //   navigation.navigate({name : 'ScoresScreen'});
+          // }}
+        >
+          <View style = {{...styles.scoreContainer}}>
+            <View style = {{...styles.score}}>
+              <Text style = {{...styles.fontScore}}>High Score</Text>
+              <Text style = {{...styles.fontScore}}>100%</Text>
+            </View>
+            <View style = {{...styles.line}}></View>
+            <View style = {{...styles.score}}>
+              <Text style = {{...styles.fontScore}}>Latest Score</Text>
+              <Text style = {{...styles.fontScore}}>100%</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <FlatList
+          data = {allExames}
+          onRefresh = {getExams}
+          refreshing={loading}
+          showsVerticalScrollIndicator={false}
+          style = {{...styles.examsContainer}}
+          renderItem = {({item: exam}) => (
+            <TouchableOpacity
+              // onPress={() => {
+              //   SelectedExam(exam._id, exam.noQues, exam.examTitel)
+              // }}
+              style = {{...styles.tExamContainer}}
+            >
+              <View style = {{...styles.examContainer}}>
+                <Image
+                      source = {{uri: exam.examImageUrl}}
+                      style = {{width : sw*60/411.4, height : sw*60/411.4, borderRadius : sw*15/411.4, backgroundColor: '#ffffff'}}
+                />
+                <View style = {{...styles.examDescription}}>
+                  <Text style = {{fontSize: sw*16/411.4, color: '#ffffff'}}>{exam.examTitel}</Text>
+                  {showDes.includes(exam._id) ? <Text style = {{fontSize: sw*10/411.4, color: '#ffffff', marginLeft: sw*4/411.4}}>{exam.examDes}</Text> : <React.Fragment></React.Fragment>}
                 </View>
-              </TouchableOpacity>
-            )}
-          />
-    </View>
+                <Icon
+                      icon = "detail"
+                      size = {35}
+                      color = "#ffffff"
+                      onPress = {() => {
+                        if (showDes.includes(exam._id)) {
+                          setShowDes(showDes.filter(id => id != exam._id))
+                        }else{
+                          setShowDes([...showDes,exam._id])
+                        }
+                      }}
+                />
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+      <Footer/>
+      
+    </SafeAreaView>
   )
 }
