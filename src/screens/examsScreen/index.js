@@ -1,11 +1,14 @@
-import { View, Text, FlatList, TouchableOpacity, Image, Dimensions, SafeAreaView } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, Image, Dimensions, SafeAreaView, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import styles from './style';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getExamsList } from '../../utiles/database';
 import { Footer, Icon } from '../../components/comp';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function ExamsScreen({navigation}) {
+export default function ExamsScreen({navigation, route}) {
+
+  // const userData = route.params.userData || "";
+  // console.log(userData)
 
   const [allExames, setAllExames] = useState([])
   const [loading, setLoading] = useState(false)
@@ -16,11 +19,16 @@ export default function ExamsScreen({navigation}) {
 
 
   const getExams = async() => {
+    const value = await AsyncStorage.getItem('userData');
+    if (value !== null) {
+      const data = JSON.parse(value)
+      console.log(data.userName);
+    }
 
     setLoading(true);
     try {
       const examsList = await getExamsList()
-      console.log({examsList})
+      // console.log({examsList})
       let tempExams = [];
 
       try {
@@ -33,7 +41,7 @@ export default function ExamsScreen({navigation}) {
 
       if (tempExams) {
         setAllExames([...tempExams]);
-        console.log(allExames)
+        // console.log(allExames)
       } else {console.log("not found")}
       setLoading(false);
     } catch (error) {
@@ -41,6 +49,34 @@ export default function ExamsScreen({navigation}) {
       setLoading(false);
     }
   }
+
+  const showAlert = () =>
+  Alert.alert(
+    'Alert Title',
+    'My Alert Msg',
+    [
+      {
+        text: 'Cancel',
+        onPress: () => Alert.alert('Cancel Pressed'),
+        style: 'cancel',
+      },
+    ],
+    {
+      cancelable: true,
+      onDismiss: () =>
+        Alert.alert(
+          'This alert was dismissed by tapping outside of the alert dialog.',
+        ),
+    },
+  );
+
+      // const styles = StyleSheet.create({
+      //   container: {
+      //     flex: 1,
+      //     justifyContent: 'center',
+      //     alignItems: 'center',
+      //   },
+      // });
 
 
   const checkUserName = async() => {
@@ -66,9 +102,11 @@ export default function ExamsScreen({navigation}) {
       <View style = {{...styles.master1}}>
         
         <TouchableOpacity
-          // onPress={() => {
-          //   navigation.navigate({name : 'ScoresScreen'});
-          // }}
+          onPress={() => {
+            // navigation.navigate({name : 'ScoresScreen'});
+            showAlert()
+            
+          }}
         >
           <View style = {{...styles.scoreContainer}}>
             <View style = {{...styles.score}}>
