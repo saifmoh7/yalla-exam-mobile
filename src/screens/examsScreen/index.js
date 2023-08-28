@@ -20,9 +20,12 @@ export default function ExamsScreen({navigation, route}) {
 
   const getExams = async() => {
     const value = await AsyncStorage.getItem('userData');
-    if (value !== null) {
+    if (value !== null || value === "guset") {
       const data = JSON.parse(value)
       console.log(data.userName);
+    }
+    else{
+      console.log(value)
     }
 
     setLoading(true);
@@ -56,9 +59,14 @@ export default function ExamsScreen({navigation, route}) {
     'My Alert Msg',
     [
       {
+        text: 'ok',
+        onPress: () => Alert.alert('Cancel Pressed'),
+        // style: 'ok',
+      },
+      {
         text: 'Cancel',
         onPress: () => Alert.alert('Cancel Pressed'),
-        style: 'cancel',
+        // style: 'cancel',
       },
     ],
     {
@@ -69,15 +77,6 @@ export default function ExamsScreen({navigation, route}) {
         ),
     },
   );
-
-      // const styles = StyleSheet.create({
-      //   container: {
-      //     flex: 1,
-      //     justifyContent: 'center',
-      //     alignItems: 'center',
-      //   },
-      // });
-
 
   const checkUserName = async() => {
 
