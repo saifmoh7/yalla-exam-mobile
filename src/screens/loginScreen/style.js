@@ -51,6 +51,13 @@ const styles = StyleSheet.create({
 
     icon: {
         margin: sw*20/411.4,
+    },
+
+    skip: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 
 })
